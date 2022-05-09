@@ -12,10 +12,16 @@ class TVB_handler():
                 get_acc=True,
                 window_size=300,
                 stride=100,
-                normalisation='minmax'
+                normalisation='minmax',
+                tensordataset=True,
+                batch_size=4,
+                collate_fn=None,
+                num_workers=None,
+                shuffle=False,
+                device='cuda',
+                progressbar=True,
                 ):
-        if mode != 'predict':
-            raise NotImplementedError
+        raiseException(mode, '==', 'predict')
         if pretrained_model_name not in SUPPORTED_MODELS:
             raise Exception(f'{pretrained_model_name} should be from {SUPPORTED_MODELS}')
 
@@ -23,11 +29,21 @@ class TVB_handler():
         self.window_size = window_size
         self.stride = stride
         self.normalisation = normalisation
+        self.tensordataset = tensordataset
+        self.batch_size = batch_size
+        self.collate_fn = collate_fn
+        self.num_workers = 2
+        self.shuffle = shuffle
+        self.device = device
+        self.progressbar = progressbar
 
     def get_pretrained_model(self, modelname):
-        if modelname == 'CNNLSTM':
-            return CNNLSTM()
-        return None, None
+        models = {'CNNLSTM':CNNLSTM(),
+                '1CNN':CNN1() ,
+                '3CNN':CNN3(),
+                '3DNN':DNN3(),
+                'Seq-CNNLSTM':Seq_CNNLSTM()}
+        return models[modelname]
 
     def predict(self, data, custom_metric=None, display_model=False, display_model_info=False):
         if display_model:
@@ -36,11 +52,13 @@ class TVB_handler():
             a = self.model.info()
             print(a)
         data = read_data(data)
-        dataloader = make_dataloaders(data, self.window_size, self.stride, self.normalisation)
-
-
+        data = make_numpyloader(data, self.window_size, self.stride, self.normalisation)
+        results = pred_from_numpy(data, self.model, self.device, self.window_size, self.tensordataset, self.batch_size,
+                        self.collate_fn, self.num_workers, self.shuffle, self.progressbar)
+        return results
 
 a = TVB_handler('CNNLSTM')
-data = np.random.uniform(size=(6, 800))
+data = np.random.uniform(size=(5, 900))
 # data = list(data)
-a.predict(data, display_model_info=True, display_model=True)
+out = a.predict(data, display_model_info=True, display_model=True)
+print(out)
