@@ -1,1 +1,1 @@
-from TVB.tvb import *
+from TVB import *
