@@ -1,9 +1,9 @@
-from models import *
+from TVB.models import *
 import numpy as np
 import os
-from tvb_utils import *
+from TVB.tvb_utils import *
 from huggingface_hub import hf_hub_download
-from logger import logger
+from TVB.logger import logger
 
 SUPPORTED_MODELS = [
                     '1CNN',

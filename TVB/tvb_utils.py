@@ -3,7 +3,7 @@ from torch.utils.data import DataLoader
 from torch.utils.data import TensorDataset
 import torch
 import operator
-from logger import logger
+from TVB.logger import logger
 from tqdm import tqdm
 from collections import Counter
 
