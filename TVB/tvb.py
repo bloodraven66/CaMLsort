@@ -115,13 +115,3 @@ class TVB_handler():
         results = pred_from_numpy(data, self.model, self.device, self.window_size, self.tensordataset, self.batch_size,
                         self.collate_fn, self.num_workers, self.shuffle, self.progressbar)
         return results
-
- # ['1CNN', '3CNN', '3DNN', 'CNNLSTM', 'Seq-CNNLSTM', 'Seq_CNNLSTM_1sec']
-for k in SUPPORTED_MODELS:
-# if True:
-    a = TVB_handler(k)
-    data = np.random.uniform(size=(5, 900))
-    # data = list(data)
-    out = a.predict(data)
-
-    (out)
