@@ -3,6 +3,7 @@ from torch.utils.data import DataLoader
 from torch.utils.data import TensorDataset
 import torch
 import operator
+from logger import logger
 from tqdm import tqdm
 from collections import Counter
 
@@ -19,6 +20,7 @@ def read_data(data):
     return data
 
 def make_numpyloader(data, window_size, stride, normalisation):
+
     data_ = []
     if len(data.shape) == 2:
         for idx in range(len(data)):
@@ -75,6 +77,7 @@ def raiseException(data, condition='==', value=True, exception=NotImplementedErr
 def pred_from_numpy(data, model, device, window_size, tensordataset, batch_size,
                     collate_fn, num_workers, shuffle, progressbar):
     raiseException(tensordataset)
+    logger.info('Loading numpy data into torch tensordataset. Avoid this on large datasets..')
     model.eval().float().to(device)
     outputs = []
     assert len(data.shape) in [2, 3]
