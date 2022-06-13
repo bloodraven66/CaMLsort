@@ -10,7 +10,7 @@ Usage
 >>> import numpy as np
 >>> from TVB.tvb import TVB_handler
 >>> tvb_handler = TVB_handler("3DNN")
->>> data = np.random.randint(size=(9,900))
+>>> data = np.random.randn(9,900)
 >>> output = tvb_handler.predict(data)
 ```
 
