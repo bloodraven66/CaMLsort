@@ -11,6 +11,13 @@ setuptools.setup(
     url='https://github.com/bloodraven66/tonicBurstingPackage',
     license='MIT',
     packages=['TVB'],
-    install_requires=['numpy','scipy',
-                    'torch', 'matplotlib'],
+    install_requires=[
+                    'numpy',
+                    'scipy',
+                    'torch', 
+                    'matplotlib',
+                    'coloredlogs',
+                    'tqdm',
+                    'huggingface_hub'
+                    ],
 )
