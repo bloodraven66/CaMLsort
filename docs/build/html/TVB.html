@@ -1,0 +1,555 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>TVB package &mdash; tonicBurstingPackage v0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="train" href="train.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> tonicBurstingPackage
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Getting started:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluate.html">evaluate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fine-tune.html">fine tune</a></li>
+<li class="toctree-l1"><a class="reference internal" href="train.html">train</a></li>
+</ul>
+<p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">TVB package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-TVB.data_utils">TVB.data_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-TVB.logger">TVB.logger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-TVB.models">TVB.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-TVB.tvb">TVB.tvb module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-TVB.tvb_utils">TVB.tvb_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-TVB">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tonicBurstingPackage</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>TVB package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/TVB.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="tvb-package">
+<h1>TVB package<a class="headerlink" href="#tvb-package" title="Permalink to this headline">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-TVB.data_utils">
+<span id="tvb-data-utils-module"></span><h2>TVB.data_utils module<a class="headerlink" href="#module-TVB.data_utils" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="TVB.data_utils.TorchDataset">
+<em class="property">class </em><code class="sig-prename descclassname">TVB.data_utils.</code><code class="sig-name descname">TorchDataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/data_utils.html#TorchDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.data_utils.TorchDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
+</dd></dl>
+
+</section>
+<section id="module-TVB.logger">
+<span id="tvb-logger-module"></span><h2>TVB.logger module<a class="headerlink" href="#module-TVB.logger" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-TVB.models">
+<span id="tvb-models-module"></span><h2>TVB.models module<a class="headerlink" href="#module-TVB.models" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="TVB.models.CNN1">
+<em class="property">class </em><code class="sig-prename descclassname">TVB.models.</code><code class="sig-name descname">CNN1</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_feats</span></em>, <em class="sig-param"><span class="n">kernel_size</span></em>, <em class="sig-param"><span class="n">stride_size</span></em>, <em class="sig-param"><span class="n">pool_size</span></em>, <em class="sig-param"><span class="n">reduce_dim</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNN1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNN1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="py method">
+<dt id="TVB.models.CNN1.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNN1.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNN1.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</aside>
+</dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.CNN1.info">
+<em class="property">static </em><code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNN1.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNN1.info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.CNN1.kernel_stride_info">
+<em class="property">static </em><code class="sig-name descname">kernel_stride_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNN1.kernel_stride_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNN1.kernel_stride_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.CNN1.results">
+<code class="sig-name descname">results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">out</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNN1.results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNN1.results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="TVB.models.CNN1.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#TVB.models.CNN1.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="TVB.models.CNN3">
+<em class="property">class </em><code class="sig-prename descclassname">TVB.models.</code><code class="sig-name descname">CNN3</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_feats</span></em>, <em class="sig-param"><span class="n">kernel_size</span></em>, <em class="sig-param"><span class="n">stride_size</span></em>, <em class="sig-param"><span class="n">pool_size</span></em>, <em class="sig-param"><span class="n">reduce_dim</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNN3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNN3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="py method">
+<dt id="TVB.models.CNN3.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNN3.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNN3.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</aside>
+</dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.CNN3.info">
+<em class="property">static </em><code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNN3.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNN3.info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.CNN3.kernel_stride_info">
+<em class="property">static </em><code class="sig-name descname">kernel_stride_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNN3.kernel_stride_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNN3.kernel_stride_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.CNN3.results">
+<code class="sig-name descname">results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">out</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNN3.results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNN3.results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="TVB.models.CNN3.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#TVB.models.CNN3.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="TVB.models.CNNLSTM">
+<em class="property">class </em><code class="sig-prename descclassname">TVB.models.</code><code class="sig-name descname">CNNLSTM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_feats</span></em>, <em class="sig-param"><span class="n">kernel_size</span></em>, <em class="sig-param"><span class="n">stride_size</span></em>, <em class="sig-param"><span class="n">hidden_size</span></em>, <em class="sig-param"><span class="n">num_layers</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNNLSTM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNNLSTM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="py method">
+<dt id="TVB.models.CNNLSTM.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNNLSTM.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNNLSTM.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</aside>
+</dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.CNNLSTM.info">
+<em class="property">static </em><code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNNLSTM.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNNLSTM.info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.CNNLSTM.kernel_stride_info">
+<em class="property">static </em><code class="sig-name descname">kernel_stride_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNNLSTM.kernel_stride_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNNLSTM.kernel_stride_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.CNNLSTM.results">
+<code class="sig-name descname">results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">out</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#CNNLSTM.results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.CNNLSTM.results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="TVB.models.CNNLSTM.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#TVB.models.CNNLSTM.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="TVB.models.DNN3">
+<em class="property">class </em><code class="sig-prename descclassname">TVB.models.</code><code class="sig-name descname">DNN3</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_feats</span></em>, <em class="sig-param"><span class="n">pool_size</span></em>, <em class="sig-param"><span class="n">reduce_dim</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#DNN3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.DNN3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="py method">
+<dt id="TVB.models.DNN3.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#DNN3.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.DNN3.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</aside>
+</dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.DNN3.info">
+<em class="property">static </em><code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#DNN3.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.DNN3.info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.DNN3.kernel_stride_info">
+<em class="property">static </em><code class="sig-name descname">kernel_stride_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#DNN3.kernel_stride_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.DNN3.kernel_stride_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.DNN3.results">
+<code class="sig-name descname">results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">out</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#DNN3.results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.DNN3.results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="TVB.models.DNN3.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#TVB.models.DNN3.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="TVB.models.Seq_CNNLSTM">
+<em class="property">class </em><code class="sig-prename descclassname">TVB.models.</code><code class="sig-name descname">Seq_CNNLSTM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kernel_size</span></em>, <em class="sig-param"><span class="n">stride_size</span></em>, <em class="sig-param"><span class="n">num_feats</span></em>, <em class="sig-param"><span class="n">num_layers</span></em>, <em class="sig-param"><span class="n">hidden_size</span></em>, <em class="sig-param"><span class="n">last_conv_kernel_size</span></em>, <em class="sig-param"><span class="n">last_conv_filter_size</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#Seq_CNNLSTM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.Seq_CNNLSTM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="py method">
+<dt id="TVB.models.Seq_CNNLSTM.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#Seq_CNNLSTM.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.Seq_CNNLSTM.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</aside>
+</dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.Seq_CNNLSTM.info">
+<em class="property">static </em><code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#Seq_CNNLSTM.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.Seq_CNNLSTM.info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.Seq_CNNLSTM.kernel_stride_info">
+<em class="property">static </em><code class="sig-name descname">kernel_stride_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#Seq_CNNLSTM.kernel_stride_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.Seq_CNNLSTM.kernel_stride_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.Seq_CNNLSTM.results">
+<code class="sig-name descname">results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">out</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#Seq_CNNLSTM.results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.Seq_CNNLSTM.results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="TVB.models.Seq_CNNLSTM.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#TVB.models.Seq_CNNLSTM.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="TVB.models.Seq_CNNLSTM_1sec">
+<em class="property">class </em><code class="sig-prename descclassname">TVB.models.</code><code class="sig-name descname">Seq_CNNLSTM_1sec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kernel_size</span></em>, <em class="sig-param"><span class="n">stride_size</span></em>, <em class="sig-param"><span class="n">num_feats</span></em>, <em class="sig-param"><span class="n">num_layers</span></em>, <em class="sig-param"><span class="n">hidden_size</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#Seq_CNNLSTM_1sec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.Seq_CNNLSTM_1sec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="py method">
+<dt id="TVB.models.Seq_CNNLSTM_1sec.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#Seq_CNNLSTM_1sec.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.Seq_CNNLSTM_1sec.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</aside>
+</dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.Seq_CNNLSTM_1sec.info">
+<em class="property">static </em><code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#Seq_CNNLSTM_1sec.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.Seq_CNNLSTM_1sec.info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.Seq_CNNLSTM_1sec.kernel_stride_info">
+<em class="property">static </em><code class="sig-name descname">kernel_stride_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#Seq_CNNLSTM_1sec.kernel_stride_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.Seq_CNNLSTM_1sec.kernel_stride_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.models.Seq_CNNLSTM_1sec.results">
+<code class="sig-name descname">results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">out</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#Seq_CNNLSTM_1sec.results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.Seq_CNNLSTM_1sec.results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="TVB.models.Seq_CNNLSTM_1sec.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#TVB.models.Seq_CNNLSTM_1sec.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="TVB.models.extract_from_presigmoid_logits">
+<code class="sig-prename descclassname">TVB.models.</code><code class="sig-name descname">extract_from_presigmoid_logits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">out</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#extract_from_presigmoid_logits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.extract_from_presigmoid_logits" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="TVB.models.extract_from_presoftmax_logits">
+<code class="sig-prename descclassname">TVB.models.</code><code class="sig-name descname">extract_from_presoftmax_logits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">out</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/models.html#extract_from_presoftmax_logits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.models.extract_from_presoftmax_logits" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-TVB.tvb">
+<span id="tvb-tvb-module"></span><h2>TVB.tvb module<a class="headerlink" href="#module-TVB.tvb" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="TVB.tvb.TVB_handler">
+<em class="property">class </em><code class="sig-prename descclassname">TVB.tvb.</code><code class="sig-name descname">TVB_handler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained_model_name</span></em>, <em class="sig-param"><span class="n">load_weights</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">custom_model</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'predict'</span></em>, <em class="sig-param"><span class="n">get_f1</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">get_acc</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">window_size</span><span class="o">=</span><span class="default_value">300</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">300</span></em>, <em class="sig-param"><span class="n">normalisation</span><span class="o">=</span><span class="default_value">'minmax'</span></em>, <em class="sig-param"><span class="n">tensordataset</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">collate_fn</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">num_workers</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">shuffle</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">device</span><span class="o">=</span><span class="default_value">'cuda'</span></em>, <em class="sig-param"><span class="n">progressbar</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">model_cache_dir</span><span class="o">=</span><span class="default_value">'.cache_dir'</span></em>, <em class="sig-param"><span class="n">repo_id</span><span class="o">=</span><span class="default_value">'viks66/TVB'</span></em>, <em class="sig-param"><span class="n">use_logger</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/tvb.html#TVB_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.tvb.TVB_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="TVB.tvb.TVB_handler.check_device_status">
+<code class="sig-name descname">check_device_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/tvb.html#TVB_handler.check_device_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.tvb.TVB_handler.check_device_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.tvb.TVB_handler.download_and_load_weights">
+<code class="sig-name descname">download_and_load_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/tvb.html#TVB_handler.download_and_load_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.tvb.TVB_handler.download_and_load_weights" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.tvb.TVB_handler.get_pretrained_model">
+<code class="sig-name descname">get_pretrained_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">modelname</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/tvb.html#TVB_handler.get_pretrained_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.tvb.TVB_handler.get_pretrained_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="TVB.tvb.TVB_handler.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">custom_metric</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">display_model</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">display_model_info</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/tvb.html#TVB_handler.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.tvb.TVB_handler.predict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-TVB.tvb_utils">
+<span id="tvb-tvb-utils-module"></span><h2>TVB.tvb_utils module<a class="headerlink" href="#module-TVB.tvb_utils" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="TVB.tvb_utils.chunks">
+<code class="sig-prename descclassname">TVB.tvb_utils.</code><code class="sig-name descname">chunks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">signal</span></em>, <em class="sig-param"><span class="n">window_size</span></em>, <em class="sig-param"><span class="n">stride</span></em>, <em class="sig-param"><span class="n">normalisation</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/tvb_utils.html#chunks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.tvb_utils.chunks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="TVB.tvb_utils.make_dataloaders">
+<code class="sig-prename descclassname">TVB.tvb_utils.</code><code class="sig-name descname">make_dataloaders</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">window_size</span></em>, <em class="sig-param"><span class="n">stride</span></em>, <em class="sig-param"><span class="n">normalisation</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/tvb_utils.html#make_dataloaders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.tvb_utils.make_dataloaders" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="TVB.tvb_utils.make_numpyloader">
+<code class="sig-prename descclassname">TVB.tvb_utils.</code><code class="sig-name descname">make_numpyloader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">window_size</span></em>, <em class="sig-param"><span class="n">stride</span></em>, <em class="sig-param"><span class="n">normalisation</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/tvb_utils.html#make_numpyloader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.tvb_utils.make_numpyloader" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="TVB.tvb_utils.normalise_data">
+<code class="sig-prename descclassname">TVB.tvb_utils.</code><code class="sig-name descname">normalise_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">norm_type</span><span class="o">=</span><span class="default_value">'minmax'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/tvb_utils.html#normalise_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.tvb_utils.normalise_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="TVB.tvb_utils.pred_from_numpy">
+<code class="sig-prename descclassname">TVB.tvb_utils.</code><code class="sig-name descname">pred_from_numpy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">device</span></em>, <em class="sig-param"><span class="n">window_size</span></em>, <em class="sig-param"><span class="n">tensordataset</span></em>, <em class="sig-param"><span class="n">batch_size</span></em>, <em class="sig-param"><span class="n">collate_fn</span></em>, <em class="sig-param"><span class="n">num_workers</span></em>, <em class="sig-param"><span class="n">shuffle</span></em>, <em class="sig-param"><span class="n">progressbar</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/tvb_utils.html#pred_from_numpy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.tvb_utils.pred_from_numpy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="TVB.tvb_utils.raiseException">
+<code class="sig-prename descclassname">TVB.tvb_utils.</code><code class="sig-name descname">raiseException</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">condition='=='</em>, <em class="sig-param">value=True</em>, <em class="sig-param">exception=&lt;class 'NotImplementedError'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/tvb_utils.html#raiseException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.tvb_utils.raiseException" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="TVB.tvb_utils.read_data">
+<code class="sig-prename descclassname">TVB.tvb_utils.</code><code class="sig-name descname">read_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TVB/tvb_utils.html#read_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TVB.tvb_utils.read_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-TVB">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-TVB" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="train.html" class="btn btn-neutral float-left" title="train" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Sathvik Udupa
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

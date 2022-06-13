@@ -11,8 +11,7 @@ tonicBurstingPackage
 
 
 Licence
-==================
-
+--------
 
 <licence>
 
@@ -20,10 +19,16 @@ Licence
    :maxdepth: 1
    :caption: Getting started:
 
-   installation.md
-   evaluate.md
-   fine-tune.md
-   train.md
+   installation.rst
+   evaluate.rst
+   fine-tune.rst
+   train.rst
 
 API Documentation
---------
+------------------------------------------------
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   TVB.rst

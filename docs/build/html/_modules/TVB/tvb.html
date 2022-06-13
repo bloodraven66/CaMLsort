@@ -1,0 +1,325 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>TVB.tvb &mdash; tonicBurstingPackage v0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> tonicBurstingPackage
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Getting started:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../evaluate.html">evaluate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fine-tune.html">fine tune</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../train.html">train</a></li>
+</ul>
+<p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../TVB.html">TVB package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tonicBurstingPackage</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>TVB.tvb</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for TVB.tvb</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">TVB.models</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">TVB.tvb_utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">huggingface_hub</span> <span class="kn">import</span> <span class="n">hf_hub_download</span>
+<span class="kn">from</span> <span class="nn">TVB.logger</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="n">SUPPORTED_MODELS</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="s1">&#39;1CNN&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;3CNN&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;3DNN&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;CNNLSTM&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Seq_CNNLSTM&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Seq_CNNLSTM_1sec&#39;</span>
+                    <span class="p">]</span>
+
+<div class="viewcode-block" id="TVB_handler"><a class="viewcode-back" href="../../TVB.html#TVB.tvb.TVB_handler">[docs]</a><span class="k">class</span> <span class="nc">TVB_handler</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">pretrained_model_name</span><span class="p">,</span>
+                <span class="n">load_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">custom_model</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;predict&#39;</span><span class="p">,</span>
+                <span class="n">get_f1</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">get_acc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">window_size</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+                <span class="n">stride</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+                <span class="n">normalisation</span><span class="o">=</span><span class="s1">&#39;minmax&#39;</span><span class="p">,</span>
+                <span class="n">tensordataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                <span class="n">collate_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+                <span class="n">progressbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">model_cache_dir</span><span class="o">=</span><span class="s1">&#39;.cache_dir&#39;</span><span class="p">,</span>
+                <span class="n">repo_id</span><span class="o">=</span><span class="s2">&quot;viks66/TVB&quot;</span><span class="p">,</span>
+                <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">use_logger</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">raiseException</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="s1">&#39;==&#39;</span><span class="p">,</span> <span class="s1">&#39;predict&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pretrained_model_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">SUPPORTED_MODELS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pretrained_model_name</span><span class="si">}</span><span class="s1"> should be from </span><span class="si">{</span><span class="n">SUPPORTED_MODELS</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using </span><span class="si">{</span><span class="n">pretrained_model_name</span><span class="si">}</span><span class="s2"> model&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pretrained_model_name</span> <span class="o">=</span> <span class="n">pretrained_model_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="o">=</span> <span class="n">window_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stride</span> <span class="o">=</span> <span class="n">stride</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalisation</span> <span class="o">=</span> <span class="n">normalisation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tensordataset</span> <span class="o">=</span> <span class="n">tensordataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collate_fn</span> <span class="o">=</span> <span class="n">collate_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span> <span class="o">=</span> <span class="n">num_workers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span> <span class="o">=</span> <span class="n">shuffle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progressbar</span> <span class="o">=</span> <span class="n">progressbar</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_cache_dir</span> <span class="o">=</span> <span class="n">model_cache_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repo_id</span> <span class="o">=</span> <span class="n">repo_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_pretrained_model</span><span class="p">(</span><span class="n">pretrained_model_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_device_status</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">load_weights</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">download_and_load_weights</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="TVB_handler.check_device_status"><a class="viewcode-back" href="../../TVB.html#TVB.tvb.TVB_handler.check_device_status">[docs]</a>    <span class="k">def</span> <span class="nf">check_device_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">!=</span> <span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">(),</span> <span class="s1">&#39;GPU not accessible, specify device as CPU&#39;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Running on device- </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TVB_handler.get_pretrained_model"><a class="viewcode-back" href="../../TVB.html#TVB.tvb.TVB_handler.get_pretrained_model">[docs]</a>    <span class="k">def</span> <span class="nf">get_pretrained_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modelname</span><span class="p">):</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;CNNLSTM&#39;</span><span class="p">:</span><span class="n">CNNLSTM</span><span class="p">,</span>
+                <span class="s1">&#39;1CNN&#39;</span><span class="p">:</span><span class="n">CNN1</span> <span class="p">,</span>
+                <span class="s1">&#39;3CNN&#39;</span><span class="p">:</span><span class="n">CNN3</span><span class="p">,</span>
+                <span class="s1">&#39;3DNN&#39;</span><span class="p">:</span><span class="n">DNN3</span><span class="p">,</span>
+                <span class="s1">&#39;Seq_CNNLSTM&#39;</span><span class="p">:</span><span class="n">Seq_CNNLSTM</span><span class="p">,</span>
+                <span class="s1">&#39;Seq_CNNLSTM_1sec&#39;</span><span class="p">:</span> <span class="n">Seq_CNNLSTM_1sec</span><span class="p">,</span>
+                <span class="p">}</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="n">modelname</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+        <span class="n">kernel_stride_info</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="n">modelname</span><span class="p">]</span><span class="o">.</span><span class="n">kernel_stride_info</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">kernel_stride_info</span><span class="p">[</span><span class="s2">&quot;kernel&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Changing window size according to model training configuration to </span><span class="si">{</span><span class="n">kernel_stride_info</span><span class="p">[</span><span class="s2">&quot;kernel&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="o">=</span> <span class="n">kernel_stride_info</span><span class="p">[</span><span class="s2">&quot;kernel&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">kernel_stride_info</span><span class="p">[</span><span class="s2">&quot;stride&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Changing shift size according to model training configuration to </span><span class="si">{</span><span class="n">kernel_stride_info</span><span class="p">[</span><span class="s2">&quot;stride&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stride</span> <span class="o">=</span> <span class="n">kernel_stride_info</span><span class="p">[</span><span class="s2">&quot;stride&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pretrained_model_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Seq_CNNLSTM&#39;</span><span class="p">,</span> <span class="s1">&#39;Seq_CNNLSTM_1sec&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Batch size &gt; 1 for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pretrained_model_name</span><span class="si">}</span><span class="s1"> not supported yet, changing it to 1.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">models</span><span class="p">[</span><span class="n">modelname</span><span class="p">](</span><span class="o">**</span><span class="n">params</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TVB_handler.download_and_load_weights"><a class="viewcode-back" href="../../TVB.html#TVB.tvb.TVB_handler.download_and_load_weights">[docs]</a>    <span class="k">def</span> <span class="nf">download_and_load_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">model_names</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;CNNLSTM&#39;</span><span class="p">:</span><span class="s1">&#39;1cnn_fold2.pth&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;1CNN&#39;</span><span class="p">:</span><span class="s1">&#39;final_actual_1cnn_fold2.pth&#39;</span> <span class="p">,</span>
+                    <span class="s1">&#39;3CNN&#39;</span><span class="p">:</span><span class="s1">&#39;final_actual_3cnn_fold2.pth&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;3DNN&#39;</span><span class="p">:</span><span class="s1">&#39;final_actual_3dnn_fold2.pth&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Seq_CNNLSTM_1sec&#39;</span><span class="p">:</span><span class="s1">&#39;seq_cnn_lstm_1sec_fold2_300.pth&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Seq_CNNLSTM&#39;</span><span class="p">:</span><span class="s1">&#39;seq_cnn_lstm_fold2_300.pth&#39;</span><span class="p">,</span>
+                    <span class="p">}</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_cache_dir</span><span class="p">,</span> <span class="n">model_names</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pretrained_model_name</span><span class="p">])):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;pretrained model weights for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pretrained_model_name</span><span class="si">}</span><span class="s1"> found at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_cache_dir</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;pretrained model weights for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pretrained_model_name</span><span class="si">}</span><span class="s1"> not found at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_cache_dir</span><span class="si">}</span><span class="s1">, Downloading..&#39;</span><span class="p">)</span>
+            <span class="n">hf_hub_download</span><span class="p">(</span>
+                            <span class="n">repo_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">repo_id</span><span class="p">,</span>
+                            <span class="n">filename</span><span class="o">=</span><span class="n">model_names</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pretrained_model_name</span><span class="p">],</span>
+                            <span class="n">cache_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_cache_dir</span><span class="p">,</span>
+                            <span class="n">force_filename</span><span class="o">=</span><span class="n">model_names</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pretrained_model_name</span><span class="p">]</span>
+                            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Weights stored at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_cache_dir</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_cache_dir</span><span class="p">,</span> <span class="n">model_names</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pretrained_model_name</span><span class="p">]),</span> <span class="n">map_location</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Loaded weights into model&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TVB_handler.predict"><a class="viewcode-back" href="../../TVB.html#TVB.tvb.TVB_handler.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">data</span><span class="p">,</span>
+                <span class="n">custom_metric</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">display_model</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">display_model_info</span><span class="o">=</span><span class="kc">False</span>
+                <span class="p">):</span>
+        <span class="k">if</span> <span class="n">display_model</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">display_model_info</span><span class="p">:</span>
+            <span class="n">model_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;model parameters:</span><span class="si">{</span><span class="n">model_info</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">make_numpyloader</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalisation</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">pred_from_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tensordataset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">collate_fn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">progressbar</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span></div></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Sathvik Udupa
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

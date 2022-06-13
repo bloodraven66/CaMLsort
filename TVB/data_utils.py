@@ -1,7 +1,7 @@
 import torch
-from torch import nn
+from torch.utils.data import Dataset
 
-class TorchDataset(nn.Dataset):
+class TorchDataset(Dataset):
     def __init__(self, *args, **kwargs):
         pass
     

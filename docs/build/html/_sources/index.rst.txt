@@ -3,18 +3,32 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to tonicBurstingPackage's documentation!
+tonicBurstingPackage
 ================================================
+
+<about package>
+
+
+
+Licence
+--------
+
+<licence>
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Getting started:
+
+   installation.rst
+   evaluate.rst
+   fine-tune.rst
+   train.rst
+
+API Documentation
+------------------------------------------------
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   TVB.rst
