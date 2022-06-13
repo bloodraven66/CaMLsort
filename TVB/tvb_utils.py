@@ -84,7 +84,7 @@ def pred_from_numpy(data, model, device, window_size, tensordataset, batch_size,
     if len(data.shape) == 2: data = np.expand_dims(data, 0)
     all_results = []
     for idx in range(len(data)):
-        results = {'class':[], 'post0':[], 'post1':[]}
+        results = {'predicted_class':[], 'class0_posterior_score':[], 'class1_posterior_score':[]}
         if tensordataset:
             tensordataset = TensorDataset(torch.from_numpy(data[idx]))
             dataloader = DataLoader(tensordataset, batch_size=batch_size,
@@ -94,6 +94,18 @@ def pred_from_numpy(data, model, device, window_size, tensordataset, batch_size,
                 data_ = data_[0].unsqueeze(-1).float()
                 out = model(data_.to(device))
                 results_ = model.results(out)
-                {k:results[k].extend(results_[k]) for k in results}
-        all_results.append(results)
+                #refactor
+                for key in results_:
+                    res = np.array(results_[key])
+                    expand_dims = True if res.shape[0] == 1 else False
+                    res = res.squeeze()
+                    if expand_dims:
+                        res = np.expand_dims(res, 0)
+                    results_[key] = res
+                {key:results[key].extend(results_[key]) for key in results}
+        for key in results:
+            res = np.array(results[key]).flatten()
+            results[key] = res
+
+        all_results.append(results)    
     return all_results

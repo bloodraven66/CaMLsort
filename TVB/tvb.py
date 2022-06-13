@@ -34,7 +34,10 @@ class TVB_handler():
                 progressbar=True,
                 model_cache_dir='.cache_dir',
                 repo_id="viks66/TVB",
+                use_logger=False,
                 ):
+        if not use_logger:
+            logger.propagate = False
         raiseException(mode, '==', 'predict')
         if pretrained_model_name not in SUPPORTED_MODELS:
             raise Exception(f'{pretrained_model_name} should be from {SUPPORTED_MODELS}')
@@ -53,8 +56,14 @@ class TVB_handler():
         self.model_cache_dir = model_cache_dir
         self.repo_id = repo_id
         self.model = self.get_pretrained_model(pretrained_model_name)
+        self.check_device_status()
         if load_weights:
             self.download_and_load_weights()
+    
+    def check_device_status(self):
+        if self.device != 'cpu':
+            assert torch.cuda.is_available(), 'GPU not accessible, specify device as CPU'
+        logger.info(f'Running on device- {self.device}')
 
     def get_pretrained_model(self, modelname):
         models = {
@@ -73,6 +82,9 @@ class TVB_handler():
         if kernel_stride_info["stride"] != self.stride:
             logger.info(f'Changing shift size according to model training configuration to {kernel_stride_info["stride"]}')
             self.stride = kernel_stride_info["stride"]
+        if self.pretrained_model_name in ['Seq_CNNLSTM', 'Seq_CNNLSTM_1sec']:
+            self.batch_size = 1
+            logger.info(f'Batch size > 1 for {self.pretrained_model_name} not supported yet, changing it to 1.')
         return models[modelname](**params)
 
     def download_and_load_weights(self):
@@ -95,7 +107,7 @@ class TVB_handler():
                             force_filename=model_names[self.pretrained_model_name]
                             )
             logger.info(f'Weights stored at {self.model_cache_dir}')
-        self.model.load_state_dict(torch.load(os.path.join(self.model_cache_dir, model_names[self.pretrained_model_name])))
+        self.model.load_state_dict(torch.load(os.path.join(self.model_cache_dir, model_names[self.pretrained_model_name]), map_location=self.device))
         logger.info(f'Loaded weights into model')
 
     def predict(self,
@@ -105,13 +117,14 @@ class TVB_handler():
                 display_model_info=False
                 ):
         if display_model:
-            print(self.model)
+            logger.info(self.model)
         if display_model_info:
-            a = self.model.info()
-            print(a)
+            model_info = self.model.info()
+            logger.info(f'model parameters:{model_info}')
         data = read_data(data)
 
         data = make_numpyloader(data, self.window_size, self.stride, self.normalisation)
         results = pred_from_numpy(data, self.model, self.device, self.window_size, self.tensordataset, self.batch_size,
                         self.collate_fn, self.num_workers, self.shuffle, self.progressbar)
         return results
+
