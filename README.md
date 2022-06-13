@@ -16,7 +16,7 @@ Usage
 
 Supported models - '1CNN',  '3CNN', '3DNN', 'CNNLSTM',  'Seq_CNNLSTM',  'Seq_CNNLSTM_1sec'
 
-Documentation - [https://tvb.readthedocs.io/en/latest/?](https://tonic-bursting-package.readthedocs.io/en/latest/) (under construction)
+Documentation - https://tonic-bursting-package.readthedocs.io/en/latest/ (under construction)
 
 Features
 - Get predictions from different pretrained models
