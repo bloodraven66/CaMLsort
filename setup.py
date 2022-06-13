@@ -18,6 +18,8 @@ setuptools.setup(
                     'matplotlib',
                     'coloredlogs',
                     'tqdm',
-                    'huggingface_hub'
+                    'huggingface_hub',
+                    'sphinx==3.03',
+                    'sphinx_rtd_theme==0.4.3',
                     ],
 )
