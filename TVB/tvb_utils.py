@@ -71,10 +71,10 @@ def raiseException(data, condition='==', value=True, exception=NotImplementedErr
     try:
         assert operator_mappings[condition](data,value)
     except:
-        raise exception
+        raise exception> For visualization of the prediction results, we should have two options
+Okay i'll add and let you know
 
-
-def pred_from_numpy(data, model, device, window_size, tensordataset, batch_size,
+ize, tensordataset, batch_size,
                     collate_fn, num_workers, shuffle, progressbar):
     raiseException(tensordataset)
     logger.info('Loading numpy data into torch tensordataset. Avoid this on large datasets..')
@@ -84,7 +84,7 @@ def pred_from_numpy(data, model, device, window_size, tensordataset, batch_size,
     if len(data.shape) == 2: data = np.expand_dims(data, 0)
     all_results = []
     for idx in range(len(data)):
-        results = {'predicted_class':[], 'class0_posterior_score':[], 'class1_posterior_score':[]}
+        results = {'predicted_class':[], 'posterior0':[], 'posterior1':[]}
         if tensordataset:
             tensordataset = TensorDataset(torch.from_numpy(data[idx]))
             dataloader = DataLoader(tensordataset, batch_size=batch_size,

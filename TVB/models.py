@@ -322,13 +322,13 @@ def extract_from_presoftmax_logits(out):
     softmax_output = nn.Softmax(dim=1)(out).detach().cpu()
     class_ = torch.argmax(softmax_output, dim=1).numpy()
     return {'predicted_class':class_,
-            'class0_posterior_score':softmax_output[:, 0].tolist(),
-            'class1_posterior_score':softmax_output[:, 1].tolist()}
+            'posterior0':softmax_output[:, 0].tolist(),
+            'posterior1':softmax_output[:, 1].tolist()}
 
 def extract_from_presigmoid_logits(out):
     class_ = (torch.sigmoid(out)>0.5).float().tolist()
     post0 = (1-torch.sigmoid(out)).detach().cpu().numpy()
     post1 = (torch.sigmoid(out)).detach().cpu().numpy()
     return {'predicted_class':class_,
-            'class0_posterior_score':post0.tolist(),
-            'class1_posterior_score':post1.tolist()}
+            'posterior0':post0.tolist(),
+            'posterior1':post1.tolist()}

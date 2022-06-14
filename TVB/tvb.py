@@ -35,6 +35,7 @@ class TVB_handler():
                 model_cache_dir='.cache_dir',
                 repo_id="viks66/TVB",
                 use_logger=False,
+                plot_folder=".plots"
                 ):
         if not use_logger:
             logger.propagate = False
