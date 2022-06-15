@@ -31,11 +31,12 @@ class TVB_handler():
                 num_workers=2,
                 shuffle=False,
                 device='cuda',
-                progressbar=True,
+                progressbar=False,
                 model_cache_dir='.cache_dir',
                 repo_id="viks66/TVB",
-                use_logger=False,
-                plot_folder=".plots"
+                use_logger=True,
+                plot_folder=".plots",
+                sampling_frequency=30,
                 ):
         if not use_logger:
             logger.propagate = False
@@ -61,6 +62,14 @@ class TVB_handler():
         if load_weights:
             self.download_and_load_weights()
     
+    def check_sampling_rate(self, data, sampling_rate):
+        if sampling_rate == 30:
+            logger.info("Assuming data is processed at 30Hz")
+        else:
+            logger.info(f"Interpolating data from {sampling_rate}Hz to 30Hz")
+            data = interpolate(data, sampling_rate)
+        return data
+
     def check_device_status(self):
         if self.device != 'cpu':
             assert torch.cuda.is_available(), 'GPU not accessible, specify device as CPU'
@@ -111,21 +120,62 @@ class TVB_handler():
         self.model.load_state_dict(torch.load(os.path.join(self.model_cache_dir, model_names[self.pretrained_model_name]), map_location=self.device))
         logger.info(f'Loaded weights into model')
 
-    def predict(self,
-                data,
-                custom_metric=None,
+    def model_docs(self, 
                 display_model=False,
-                display_model_info=False
+                display_model_info=False,
                 ):
         if display_model:
             logger.info(self.model)
         if display_model_info:
             model_info = self.model.info()
             logger.info(f'model parameters:{model_info}')
-        data = read_data(data)
 
+    def predict(self,
+                data,
+                custom_metric=None,
+                display_model=False,
+                display_model_info=False,
+                sampling_rate=30,
+                ):
+        self.model_docs(display_model, display_model_info)
+
+        data = read_data(data)
+        data = self.check_sampling_rate(data, sampling_rate)
         data = make_numpyloader(data, self.window_size, self.stride, self.normalisation)
         results = pred_from_numpy(data, self.model, self.device, self.window_size, self.tensordataset, self.batch_size,
                         self.collate_fn, self.num_workers, self.shuffle, self.progressbar)
         return results
+    
+    def finetune(self,
+                data,
+                label,
+                custom_metric=None,
+                display_model=False,
+                display_model_info=False,
+                sampling_rate=30
+                )
+        self.model_docs(display_model, display_model_info)
+        data = read_data(data)
+        data = self.check_sampling_rate(data, sampling_rate)
+        data = make_numpyloader(data, self.window_size, self.stride, self.normalisation)
+        train_from_numpy(data, label, self.model, self.device, self.window_size, self.tensordataset, self.batch_size,
+                        self.collate_fn, self.num_workers, self.shuffle, self.progressbar)
+    
+    def train(
+            data,
+            label,
+            custom_metric=None,
+            display_model=False,
+            display_model_info=False,
+            sampling_rate=30
+            )
+        self.model_docs(display_model, display_model_info)
+        data = read_data(data)
+        data = self.check_sampling_rate(data, sampling_rate)
+        data = make_numpyloader(data, self.window_size, self.stride, self.normalisation)
+        train_from_numpy(data, label, self.model, self.device, self.window_size, self.tensordataset, self.batch_size,
+                        self.collate_fn, self.num_workers, self.shuffle, self.progressbar)
+# data = np.random.randn(9, 9000)
+# tvb_handler = TVB_handler('3DNN')
+# tvb_handler.predict(data, sampling_rate=100)
 

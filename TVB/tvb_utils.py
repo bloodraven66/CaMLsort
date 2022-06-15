@@ -19,6 +19,18 @@ def read_data(data):
     raiseException(len(data.shape), '<=', 2)
     return data
 
+def interpolate(data, freq_from, freq_to=30):
+    raiseException(len(data.shape), '==', 2)
+    interpolated_data = []
+    for i in range(len(data)):
+        n_current = len(data[i])
+        x_current = np.arange(0, n_current)
+        num_samples = np.floor((n_current/freq_from)*freq_to).astype(int)
+        x_required = np.arange(0, num_samples)
+        interpolated_data_ = np.interp(x_required, x_current, data[i])
+        interpolated_data.append(interpolated_data_)
+    return np.array(interpolated_data)
+
 def make_numpyloader(data, window_size, stride, normalisation):
 
     data_ = []
