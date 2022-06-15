@@ -16,7 +16,7 @@ Licence
 
 MIT License
 
-Copyright (c) 2000 Aalok Varma and Sathvik Udupa
+Copyright (c) 2022 Aalok Varma and Sathvik Udupa
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
