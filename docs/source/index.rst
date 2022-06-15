@@ -6,9 +6,10 @@
 tonicBurstingPackage
 ================================================
 
-<about package>
+Python package for training neural networks to predict the bistable state of Purkinje neurons. Default, pre-trained models can also be used. This is in association with the publication (LINK HERE).
 
-
+If you use this tool, please cite
+Varma A, Udupa S, Sengupta M, Ghosh PK, Thirumalai V, A machine-learning tool to identify bistable states from calcium imaging data. (LINK TO DOI, once available)
 
 Licence
 --------
