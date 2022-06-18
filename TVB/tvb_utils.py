@@ -7,39 +7,36 @@ from TVB.logger import logger
 from tqdm import tqdm
 from collections import Counter
 
-def read_data(data):
-    if isinstance(data, np.ndarray):
-        pass
-    elif isinstance(data, list):
-        data = np.array(data)
 
-    else:
-        raise NotImplementedError
 
-    raiseException(len(data.shape), '<=', 2)
-    return data
 
 def interpolate(data, freq_from, freq_to=30):
-    raiseException(len(data.shape), '==', 2)
-    interpolated_data = []
-    for i in range(len(data)):
-        n_current = len(data[i])
-        x_current = np.arange(0, n_current)
-        num_samples = np.floor((n_current/freq_from)*freq_to).astype(int)
-        x_required = np.arange(0, num_samples)
-        interpolated_data_ = np.interp(x_required, x_current, data[i])
-        interpolated_data.append(interpolated_data_)
-    return np.array(interpolated_data)
+    interpolated_data = {}
+    for exp_key in data:
+        interpolated_data_ = {}
+        for filename in data[exp_key]:
+            filedata, filelabel = data[exp_key][filename]
+            n_current = len(filedata)
+            x_current = np.arange(0, n_current)
+            num_samples = np.floor((n_current/freq_from)*freq_to).astype(int)
+            x_required = np.arange(0, num_samples)
+            interpolated_data_[filename] = [np.interp(x_required, x_current, filedata), filelabel]
+        interpolated_data[exp_key] = interpolated_data_
+    return interpolated_data
+
+
 
 def make_numpyloader(data, window_size, stride, normalisation):
-
-    data_ = []
-    if len(data.shape) == 2:
-        for idx in range(len(data)):
-            data_.append(chunks(data[idx], window_size, stride, normalisation))
-    else:
-        raise NotImplementedError
-    return np.array(data_)
+    chunked_data = {}
+    for exp_key in data:
+        chunked_data_ = {}
+        for filename in data[exp_key]:
+            
+            data_, label_ = data[exp_key][filename]
+            chunk_data, chunk_label = chunks(data_, label_, window_size, stride, normalisation)
+            chunked_data_[filename] = [chunk_data, chunk_label]
+        chunked_data[exp_key] = chunked_data_
+    return chunked_data
 
 def make_dataloaders(data, window_size, stride, normalisation):
     data_ = []
@@ -61,14 +58,19 @@ def normalise_data(data, norm_type='minmax'):
         raise NotImplementedError
     return data
 
-def chunks(signal, window_size, stride, normalisation):
-    data = []
+def chunks(signal, label_, window_size, stride, normalisation):
+    data, label = [], []
     n_chunks = int((len(signal)-window_size)/stride) +  1
     for i in range(n_chunks):
         chunk = signal[int(i*stride) : int(window_size+(i*stride))]
         chunk = normalise_data(chunk, norm_type=normalisation)
         data.append(chunk)
-    return data
+        label_ = None
+        if label_ is None:
+            label.append(label)
+        else:
+            raise NotImplementedError
+    return data, label
 
 def raiseException(data, condition='==', value=True, exception=NotImplementedError):
     operator_mappings = {
@@ -85,19 +87,26 @@ def raiseException(data, condition='==', value=True, exception=NotImplementedErr
     except:
         raise exception
 
-def pred_from_numpy(data, model, device, window_size, tensordataset, batch_size,
+def pred_from_dict(data, model, device, window_size, tensordataset, batch_size,
                     collate_fn, num_workers, shuffle, progressbar):
     raiseException(tensordataset)
-    logger.info('Loading numpy data into torch tensordataset. Avoid this on large datasets..')
+    logger.info('Loading dict data into torch tensordataset. Avoid this on large datasets..')
     model.eval().float().to(device)
-    outputs = []
-    assert len(data.shape) in [2, 3]
-    if len(data.shape) == 2: data = np.expand_dims(data, 0)
-    all_results = []
-    for idx in range(len(data)):
-        results = {'predicted_class':[], 'posterior0':[], 'posterior1':[]}
-        if tensordataset:
-            tensordataset = TensorDataset(torch.from_numpy(data[idx]))
+    exp_results = {}
+    for exp_key in data:
+        file_results = {}
+        for filename in data[exp_key]:
+            file_data, file_label = data[exp_key][filename]
+            file_data = np.array(file_data)
+            # print(file_data)
+            # print(file_data.shape)
+            try: 
+                assert len(file_data.shape) == 2
+            except:
+                logger.info(f"No windows found, skipping file {filename} in {exp_key}")
+                continue
+            results = {'predicted_class':[], 'posterior0':[], 'posterior1':[]}
+            tensordataset = TensorDataset(torch.from_numpy(file_data))
             dataloader = DataLoader(tensordataset, batch_size=batch_size,
                                     collate_fn=collate_fn, num_workers=num_workers,
                                     shuffle=shuffle)
@@ -114,9 +123,10 @@ def pred_from_numpy(data, model, device, window_size, tensordataset, batch_size,
                         res = np.expand_dims(res, 0)
                     results_[key] = res
                 {key:results[key].extend(results_[key]) for key in results}
-        for key in results:
-            res = np.array(results[key]).flatten()
-            results[key] = res
 
-        all_results.append(results)    
-    return all_results
+            for key in results:
+                res = np.array(results[key]).flatten()
+                results[key] = res
+            file_results[filename] = results
+        exp_results[exp_key] = file_results
+    return exp_results

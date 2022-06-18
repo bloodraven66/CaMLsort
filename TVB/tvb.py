@@ -1,6 +1,8 @@
 from TVB.models import *
+from TVB.data_utils import *
 import numpy as np
 import os
+import copy
 from TVB.tvb_utils import *
 from huggingface_hub import hf_hub_download
 from TVB.logger import logger
@@ -37,6 +39,7 @@ class TVB_handler():
                 use_logger=True,
                 plot_folder=".plots",
                 sampling_frequency=30,
+                sample_data_path='.sample_data',
                 ):
         if not use_logger:
             logger.propagate = False
@@ -58,17 +61,12 @@ class TVB_handler():
         self.model_cache_dir = model_cache_dir
         self.repo_id = repo_id
         self.model = self.get_pretrained_model(pretrained_model_name)
+        self.sample_data_path = sample_data_path
         self.check_device_status()
         if load_weights:
             self.download_and_load_weights()
     
-    def check_sampling_rate(self, data, sampling_rate):
-        if sampling_rate == 30:
-            logger.info("Assuming data is processed at 30Hz")
-        else:
-            logger.info(f"Interpolating data from {sampling_rate}Hz to 30Hz")
-            data = interpolate(data, sampling_rate)
-        return data
+    
 
     def check_device_status(self):
         if self.device != 'cpu':
@@ -129,53 +127,50 @@ class TVB_handler():
         if display_model_info:
             model_info = self.model.info()
             logger.info(f'model parameters:{model_info}')
+    
+    def data_handler(self, 
+                    data, 
+                    label, 
+                    filename, 
+                    exp_name, 
+                    use_sample_data,
+                    sampling_rate
+                    ):
+        if data is None and use_sample_data is False:
+            raise Exception("Provide data or enable 'use_sample_data'")
+
+        if use_sample_data:
+            data = download_sample_dataset(self.sample_data_path, self.repo_id)
+        
+        data = read_data(data, label, filename, exp_name)
+        data = check_sampling_rate(data, sampling_rate)
+        data = make_numpyloader(data, self.window_size, self.stride, self.normalisation)
+        return data, copy.deepcopy(data)
+
 
     def predict(self,
-                data,
+                data=None,
+                label=None,
+                filename=None,
+                exp_name="exp",
+                use_sample_data=False,
                 custom_metric=None,
                 display_model=False,
                 display_model_info=False,
                 sampling_rate=30,
                 ):
         self.model_docs(display_model, display_model_info)
-
-        data = read_data(data)
-        data = self.check_sampling_rate(data, sampling_rate)
-        data = make_numpyloader(data, self.window_size, self.stride, self.normalisation)
-        results = pred_from_numpy(data, self.model, self.device, self.window_size, self.tensordataset, self.batch_size,
+        data, raw_data = self.data_handler(data, label, filename, exp_name, use_sample_data, sampling_rate)
+         
+        results = pred_from_dict(data, self.model, self.device, self.window_size, self.tensordataset, self.batch_size,
                         self.collate_fn, self.num_workers, self.shuffle, self.progressbar)
+        
         return results
-    
-    def finetune(self,
-                data,
-                label,
-                custom_metric=None,
-                display_model=False,
-                display_model_info=False,
-                sampling_rate=30
-                )
-        self.model_docs(display_model, display_model_info)
-        data = read_data(data)
-        data = self.check_sampling_rate(data, sampling_rate)
-        data = make_numpyloader(data, self.window_size, self.stride, self.normalisation)
-        train_from_numpy(data, label, self.model, self.device, self.window_size, self.tensordataset, self.batch_size,
-                        self.collate_fn, self.num_workers, self.shuffle, self.progressbar)
-    
-    def train(
-            data,
-            label,
-            custom_metric=None,
-            display_model=False,
-            display_model_info=False,
-            sampling_rate=30
-            )
-        self.model_docs(display_model, display_model_info)
-        data = read_data(data)
-        data = self.check_sampling_rate(data, sampling_rate)
-        data = make_numpyloader(data, self.window_size, self.stride, self.normalisation)
-        train_from_numpy(data, label, self.model, self.device, self.window_size, self.tensordataset, self.batch_size,
-                        self.collate_fn, self.num_workers, self.shuffle, self.progressbar)
+ 
+
+    # def prep_data(self, da)
 # data = np.random.randn(9, 9000)
 # tvb_handler = TVB_handler('3DNN')
+# tvb_handler.predict(use_sample_data=True, sampling_rate=100)
 # tvb_handler.predict(data, sampling_rate=100)
 
