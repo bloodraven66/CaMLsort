@@ -2,6 +2,7 @@ import numpy as np
 from torch.utils.data import DataLoader
 from torch.utils.data import TensorDataset
 import torch
+from tqdm import tqdm
 import operator
 from TVB.logger import logger
 from tqdm import tqdm
@@ -31,22 +32,20 @@ def make_numpyloader(data, window_size, stride, normalisation):
     for exp_key in data:
         chunked_data_ = {}
         for filename in data[exp_key]:
-            
             data_, label_ = data[exp_key][filename]
             chunk_data, chunk_label = chunks(data_, label_, window_size, stride, normalisation)
             chunked_data_[filename] = [chunk_data, chunk_label]
         chunked_data[exp_key] = chunked_data_
     return chunked_data
 
-def make_dataloaders(data, window_size, stride, normalisation):
-    data_ = []
-    if len(data.shape) == 2:
-        for idx in range(len(data)):
-            data_.append(chunks(data[idx], window_size, stride, normalisation))
-    else:
-        raise NotImplementedError
-    dataset = TensorDataset(torch.from_numpy(np.array(data_)))
-    dataloader = DataLoader(dataset)
+def make_dataloaders(data, label, window_size, stride, normalisation, batch_size, shuffle):
+    data_, labels = [], []
+    for idx in tqdm(range(len(data))):
+        data_chunks, label_chunks = chunks(data[idx], label[idx], window_size, stride, normalisation)
+        data_.append(data_chunks)
+        labels.append(label_chunks)
+    dataset = TensorDataset(torch.from_numpy(np.array(data_)), torch.from_numpy(np.array(labels)))
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
     return dataloader
 
 def normalise_data(data, norm_type='minmax'):
@@ -65,11 +64,7 @@ def chunks(signal, label_, window_size, stride, normalisation):
         chunk = signal[int(i*stride) : int(window_size+(i*stride))]
         chunk = normalise_data(chunk, norm_type=normalisation)
         data.append(chunk)
-        label_ = None
-        if label_ is None:
-            label.append(label)
-        else:
-            raise NotImplementedError
+        label.append(label_)
     return data, label
 
 def raiseException(data, condition='==', value=True, exception=NotImplementedError):

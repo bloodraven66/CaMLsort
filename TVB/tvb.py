@@ -3,6 +3,7 @@ from TVB.data_utils import *
 import numpy as np
 import os
 import copy
+from TVB.train import *
 from TVB.tvb_utils import *
 from huggingface_hub import hf_hub_download
 from TVB.logger import logger
@@ -65,7 +66,6 @@ class TVB_handler():
         self.check_device_status()
         if load_weights:
             self.download_and_load_weights()
-    
     
 
     def check_device_status(self):
@@ -147,6 +147,21 @@ class TVB_handler():
         data = make_numpyloader(data, self.window_size, self.stride, self.normalisation)
         return data, copy.deepcopy(data)
 
+    def train_data_handler(self, 
+                            train_data, 
+                            train_label, 
+                            validation_data,
+                            validation_label,
+                            sampling_rate
+                    ):
+
+        assert sampling_rate == 30, f're sampling not supported'
+        trainloader = make_dataloaders(train_data, train_label, self.window_size, self.stride, self.normalisation, batch_size=self.batch_size, shuffle=self.shuffle)
+        valloader = make_dataloaders(validation_data, validation_label, self.window_size, self.stride, self.normalisation, batch_size=self.batch_size, shuffle=self.shuffle)
+        logger.info('Created dataloaders')
+        return trainloader, valloader
+
+
 
     def predict(self,
                 data=None,
@@ -166,11 +181,44 @@ class TVB_handler():
                         self.collate_fn, self.num_workers, self.shuffle, self.progressbar)
         
         return results
- 
+    
+    def train(self,
+            train_data=None,
+            train_label=None,
+            validation_data=None,
+            validation_label=None,
+            filename=None,
+            exp_name="exp",
+            sampling_rate=30,
+            training_args={'lr':0.0001, 
+                        'epochs':100, 
+                        'random_segment_training':True, 
+                        'min_segment_length':3,
+                        'metrics_verbose':1,
+                        'save_by_validation_chk':True,
+                        'save_chk_name':'test_model.pth',
+                        'overwrite_model':False}):
+        
+        loaders = self.train_data_handler(train_data, train_label, validation_data, validation_label, sampling_rate)
+        if 'random_segment_training' in training_args and self.pretrained_model_name == 'Seq_CNNLSTM_1sec':
+            logger.info('Creating random length continuous windows for training')
+        train_model(self.model, loaders, device=self.device, training_args=training_args)
 
     # def prep_data(self, da)
 # data = np.random.randn(9, 9000)
-# tvb_handler = TVB_handler('3DNN')
-# tvb_handler.predict(use_sample_data=True, sampling_rate=100)
-# tvb_handler.predict(data, sampling_rate=100)
+import scipy.io
+data = scipy.io.loadmat('/home/sathvik/Downloads/5.mat')['imaging'].squeeze()[:, 1]
+data = np.array([data.tolist() , data.tolist()])
+print(data.shape)
+# exit()
+tvb_handler = TVB_handler('Seq_CNNLSTM_1sec')
+tvb_handler.train(data, np.array([1, 0]), data, np.array([1, 0]))
 
+# tvb_handler.predict(use_sample_data=True
+# res = tvb_handler.predict(data)
+# res = res['exp']['0']
+# print(res)
+# import matplotlib.pyplot as plt
+# plt.plot(res['posterior0'])
+# plt.plot(res['posterior1'])
+# plt.savefig('p0.png')
