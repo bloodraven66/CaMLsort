@@ -3,11 +3,13 @@ import os
 import torch.nn as nn
 import random
 import numpy as np
+import shutil
+from pathlib import Path
 
 def check_model_overwrite(args):
     if not args['overwrite_model']:
-        if os.path.exists(args['save_chk_name']):
-            raise Exception(f'model {args["save_chk_name"]} already exists')
+        if os.path.exists(os.path.join(args.save_chk_folder, args.chk_name)):
+            raise Exception(f'model {os.path.join(args.save_chk_folder, args.chk_name)} already exists')
 
 def get_output_metrics(output, label, metrics, key, thres=0.5):
     preds = ((torch.sigmoid(output)>thres).float() == label).float().detach().cpu() .tolist()
@@ -16,8 +18,16 @@ def get_output_metrics(output, label, metrics, key, thres=0.5):
     else:
         metrics[key].append(preds)
     # exit()
+
+def make_train_folder(args):
+    folder = args.save_chk_folder
+    if not os.path.exists(folder): os.mkdir(folder)
+    shutil.copy2(args.config_name, os.path.join(folder, Path(args.config_name).stem+'.yaml'))
+    return folder
+
 def train_model(model, loaders, device, training_args):
     check_model_overwrite(training_args)
+    save_folder = make_train_folder(training_args)
     optimizer = torch.optim.AdamW(model.parameters(), lr=training_args['lr']) 
     criterion = nn.BCEWithLogitsLoss()
     model.to(device)
@@ -64,11 +74,11 @@ def train_model(model, loaders, device, training_args):
         if metrics['val_epoch'][-1] < metrics['best_val_loss']:
             metrics['best_val_loss'] = metrics['val_epoch'][-1]
             if training_args['save_by_validation_chk']:
-                torch.save(model.state_dict(), training_args['save_chk_name'])
+                torch.save(model.state_dict(), os.path.join(save_folder, training_args.chk_name))
         model.eval()
         if training_args['metrics_verbose'] == 1:
             print(f'{idx}\t{round(metrics["train_epoch"][-1], 4)}\t{round(metrics["val_epoch"][-1], 4)}\t{round(metrics["train_accuracy"][-1], 4)}\t{round(metrics["val_accuracy"][-1], 4)}')
-            
+    torch.save(metrics, os.path.join(save_folder, 'metrics.pth'))
 def check_and_make_segments(data, label, training_args):
     if 'random_segment_training' not in training_args: return data
     if training_args['random_segment_training'] == False: return data

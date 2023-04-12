@@ -1,0 +1,40 @@
+#model
+pretrained_model_name: 'Seq_CNNLSTM_1sec'
+load_weights: true
+custom_model: false
+
+#data
+window_size: 300
+stride: 300
+normalisation: 'minmax'
+sampling_frequency: 30
+sample_data_path: .sample_data
+
+
+#dataloader
+tensordataset: true
+batch_size: 4
+num_workers: 2
+shuffle: true
+device: cuda:0
+
+#huggingface
+model_cache_dir: '.cache_dir'
+repo_id: "viks66/TVB"
+
+#logs
+plot_folder: .plots
+use_logger: true
+metrics_verbose: 1
+progressbar: false
+
+#training
+finetune: true
+lr: 0.001
+epochs: 1000
+save_chk_folder: test_model
+chk_name: 'chk.pth'
+random_segment_training: true
+min_segment_length: 3
+save_by_validation_chk: true
+overwrite_model: false

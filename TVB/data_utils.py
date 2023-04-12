@@ -6,8 +6,16 @@ from torch.utils.data import Dataset
 from TVB.tvb_utils import *
 from huggingface_hub import hf_hub_download
 import shutil
+import yaml
+from attrdict import AttrDict
 from pathlib import Path
 from scipy.io import loadmat
+
+def read_yaml(yamlFile):
+    with open(yamlFile) as f:
+        config = yaml.load(f, Loader=yaml.SafeLoader)
+        cfg = AttrDict(config)
+    return cfg
 
 class TorchDataset(Dataset):
     def __init__(self, *args, **kwargs):

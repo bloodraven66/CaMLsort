@@ -83,7 +83,7 @@ def raiseException(data, condition='==', value=True, exception=NotImplementedErr
         raise exception
 
 def pred_from_dict(data, model, device, window_size, tensordataset, batch_size,
-                    collate_fn, num_workers, shuffle, progressbar):
+                    num_workers, shuffle, progressbar):
     raiseException(tensordataset)
     logger.info('Loading dict data into torch tensordataset. Avoid this on large datasets..')
     model.eval().float().to(device)
@@ -103,7 +103,7 @@ def pred_from_dict(data, model, device, window_size, tensordataset, batch_size,
             results = {'predicted_class':[], 'posterior0':[], 'posterior1':[]}
             tensordataset = TensorDataset(torch.from_numpy(file_data))
             dataloader = DataLoader(tensordataset, batch_size=batch_size,
-                                    collate_fn=collate_fn, num_workers=num_workers,
+                                    num_workers=num_workers,
                                     shuffle=shuffle)
             for data_ in tqdm(dataloader, disable=(not progressbar)):
                 data_ = data_[0].unsqueeze(-1).float()

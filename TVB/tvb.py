@@ -19,52 +19,21 @@ SUPPORTED_MODELS = [
 
 class TVB_handler():
     def __init__(self,
-                pretrained_model_name,
-                load_weights=True,
-                custom_model=False,
-                mode='predict',
-                get_f1=True,
-                get_acc=True,
-                window_size=300,
-                stride=300,
-                normalisation='minmax',
-                tensordataset=True,
-                batch_size=4,
-                collate_fn=None,
-                num_workers=2,
-                shuffle=False,
-                device='cuda',
-                progressbar=False,
-                model_cache_dir='.cache_dir',
-                repo_id="viks66/TVB",
-                use_logger=True,
-                plot_folder=".plots",
-                sampling_frequency=30,
-                sample_data_path='.sample_data',
+                config='configs/default.yaml'
                 ):
-        if not use_logger:
+        
+        
+        args = read_yaml(config)
+        self.__dict__.update(args)
+        if not args.use_logger:
             logger.propagate = False
-        raiseException(mode, '==', 'predict')
-        if pretrained_model_name not in SUPPORTED_MODELS:
-            raise Exception(f'{pretrained_model_name} should be from {SUPPORTED_MODELS}')
-        logger.info(f"Using {pretrained_model_name} model")
-        self.pretrained_model_name = pretrained_model_name
-        self.window_size = window_size
-        self.stride = stride
-        self.normalisation = normalisation
-        self.tensordataset = tensordataset
-        self.batch_size = batch_size
-        self.collate_fn = collate_fn
-        self.num_workers = num_workers
-        self.shuffle = shuffle
-        self.device = device
-        self.progressbar = progressbar
-        self.model_cache_dir = model_cache_dir
-        self.repo_id = repo_id
-        self.model = self.get_pretrained_model(pretrained_model_name)
-        self.sample_data_path = sample_data_path
-        self.check_device_status()
-        if load_weights:
+        if args.pretrained_model_name not in SUPPORTED_MODELS:
+            raise Exception(f'{args.pretrained_model_name} should be from {SUPPORTED_MODELS}')
+        logger.info(f"Using {args.pretrained_model_name} model")
+        self.model = self.get_pretrained_model(self.pretrained_model_name)
+        self.args = args
+        self.args.config_name = config
+        if args.load_weights:
             self.download_and_load_weights()
     
 
@@ -178,7 +147,7 @@ class TVB_handler():
         data, raw_data = self.data_handler(data, label, filename, exp_name, use_sample_data, sampling_rate)
          
         results = pred_from_dict(data, self.model, self.device, self.window_size, self.tensordataset, self.batch_size,
-                        self.collate_fn, self.num_workers, self.shuffle, self.progressbar)
+                        self.num_workers, self.shuffle, self.progressbar)
         
         return results
     
@@ -190,19 +159,12 @@ class TVB_handler():
             filename=None,
             exp_name="exp",
             sampling_rate=30,
-            training_args={'lr':0.0001, 
-                        'epochs':100, 
-                        'random_segment_training':True, 
-                        'min_segment_length':3,
-                        'metrics_verbose':1,
-                        'save_by_validation_chk':True,
-                        'save_chk_name':'test_model.pth',
-                        'overwrite_model':False}):
+            ):
         
         loaders = self.train_data_handler(train_data, train_label, validation_data, validation_label, sampling_rate)
-        if 'random_segment_training' in training_args and self.pretrained_model_name == 'Seq_CNNLSTM_1sec':
+        if 'random_segment_training' in self.args and self.pretrained_model_name == 'Seq_CNNLSTM_1sec':
             logger.info('Creating random length continuous windows for training')
-        train_model(self.model, loaders, device=self.device, training_args=training_args)
+        train_model(self.model, loaders, device=self.device, training_args=self.args)
 
     # def prep_data(self, da)
 # data = np.random.randn(9, 9000)
@@ -211,7 +173,7 @@ data = scipy.io.loadmat('/home/sathvik/Downloads/5.mat')['imaging'].squeeze()[:,
 data = np.array([data.tolist() , data.tolist()])
 print(data.shape)
 # exit()
-tvb_handler = TVB_handler('Seq_CNNLSTM_1sec')
+tvb_handler = TVB_handler('TVB/configs/default.yaml')
 tvb_handler.train(data, np.array([1, 0]), data, np.array([1, 0]))
 
 # tvb_handler.predict(use_sample_data=True
