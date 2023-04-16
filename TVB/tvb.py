@@ -170,12 +170,12 @@ class TVB_handler():
 
     # def prep_data(self, da)
 # data = np.random.randn(9, 9000)
-import scipy.io
-data = scipy.io.loadmat('/home/sathvik/Downloads/5.mat')['imaging'].squeeze()[:, 1]
-data = np.array([data.tolist() , data.tolist()])
-print(data.shape)
-# exit()
-tvb_handler = TVB_handler('Seq_CNNLSTM_1sec', config='TVB/configs/default.yaml')
+# import scipy.io
+# data = scipy.io.loadmat('/home/sathvik/Downloads/5.mat')['imaging'].squeeze()[:, 1]
+# data = np.array([data.tolist() , data.tolist()])
+# print(data.shape)
+# # exit()
+# tvb_handler = TVB_handler('Seq_CNNLSTM_1sec', config='TVB/configs/default.yaml')
 # tvb_handler.train(data, np.array([1, 0]), data, np.array([1, 0]))
 
 # tvb_handler.predict(use_sample_data=True
