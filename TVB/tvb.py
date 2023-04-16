@@ -20,7 +20,7 @@ SUPPORTED_MODELS = [
 class TVB_handler():
     def __init__(self,
                 pretrained_model_name=None,
-                config='configs/default.yaml'
+                config='TVB/configs/default.yaml'
                 ):
         
         
