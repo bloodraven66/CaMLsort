@@ -29,10 +29,10 @@ class TVB_handler():
             hf_hub_download(
                             repo_id=repo_id,
                             filename='default.yaml',
-                            cache_dir=self.model_cache_dir,
+                            cache_dir=model_cache_dir,
                             force_filename='default.yaml'
                             )
-            config = os.path.join(self.model_cache_dir, 'default.yaml')
+            config = os.path.join(model_cache_dir, 'default.yaml')
             logger.info(f'Using config in {config}')
             
         args = read_yaml(config)
