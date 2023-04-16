@@ -23,6 +23,7 @@ class TVB_handler():
                 config='TVB/configs/default.yaml',
                 repo_id="viks66/TVB",
                 model_cache_dir=".cache_dir",
+                device='cpu',
                 ):
 
         if not os.path.exists(config):
@@ -37,6 +38,7 @@ class TVB_handler():
             
         args = read_yaml(config)
         if pretrained_model_name is not None: args.pretrained_model_name = pretrained_model_name
+        if device is not None: args.device = device
         self.__dict__.update(args)
         if not args.use_logger:
             logger.propagate = False
