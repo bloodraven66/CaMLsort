@@ -1,5 +1,5 @@
 #model
-pretrained_model_name: 'Seq_CNNLSTM_1sec'
+pretrained_model_name: '3DNN'
 load_weights: true
 custom_model: false
 

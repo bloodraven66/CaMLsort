@@ -19,11 +19,13 @@ SUPPORTED_MODELS = [
 
 class TVB_handler():
     def __init__(self,
+                pretrained_model_name=None,
                 config='configs/default.yaml'
                 ):
         
         
         args = read_yaml(config)
+        if pretrained_model_name is not None: args.pretrained_model_name = pretrained_model_name
         self.__dict__.update(args)
         if not args.use_logger:
             logger.propagate = False
@@ -35,7 +37,7 @@ class TVB_handler():
         self.args.config_name = config
         if args.load_weights:
             self.download_and_load_weights()
-    
+
 
     def check_device_status(self):
         if self.device != 'cpu':
@@ -173,8 +175,8 @@ data = scipy.io.loadmat('/home/sathvik/Downloads/5.mat')['imaging'].squeeze()[:,
 data = np.array([data.tolist() , data.tolist()])
 print(data.shape)
 # exit()
-tvb_handler = TVB_handler('TVB/configs/default.yaml')
-tvb_handler.train(data, np.array([1, 0]), data, np.array([1, 0]))
+tvb_handler = TVB_handler('Seq_CNNLSTM_1sec', config='TVB/configs/default.yaml')
+# tvb_handler.train(data, np.array([1, 0]), data, np.array([1, 0]))
 
 # tvb_handler.predict(use_sample_data=True
 # res = tvb_handler.predict(data)
