@@ -19,7 +19,6 @@ setuptools.setup(
                     'coloredlogs',
                     'attrdict',
                     'tqdm',
-                    'yaml',
                     'huggingface_hub',
                     'sphinx==3.03',
                     'sphinx_rtd_theme==0.4.3',
