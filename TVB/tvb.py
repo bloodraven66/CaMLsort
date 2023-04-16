@@ -22,8 +22,17 @@ class TVB_handler():
                 pretrained_model_name=None,
                 config='TVB/configs/default.yaml'
                 ):
-        
-        
+
+        if not os.path.exists(config):
+            hf_hub_download(
+                            repo_id=self.repo_id,
+                            filename='default.yaml',
+                            cache_dir=self.model_cache_dir,
+                            force_filename='default.yaml'
+                            )
+            config = os.path.join(self.model_cache_dir, 'default.yaml')
+            logger.info(f'Using config in {config}')
+            
         args = read_yaml(config)
         if pretrained_model_name is not None: args.pretrained_model_name = pretrained_model_name
         self.__dict__.update(args)
