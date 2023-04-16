@@ -20,12 +20,14 @@ SUPPORTED_MODELS = [
 class TVB_handler():
     def __init__(self,
                 pretrained_model_name=None,
-                config='TVB/configs/default.yaml'
+                config='TVB/configs/default.yaml',
+                repo_id="viks66/TVB",
+                model_cache_dir=".cache_dir",
                 ):
 
         if not os.path.exists(config):
             hf_hub_download(
-                            repo_id=self.repo_id,
+                            repo_id=repo_id,
                             filename='default.yaml',
                             cache_dir=self.model_cache_dir,
                             force_filename='default.yaml'
