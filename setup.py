@@ -3,14 +3,14 @@ import setuptools
 
 
 setuptools.setup(
-    name='TVB',
+    name='CaMLsort',
     version='0.0.1',
     author='Sathvik Udupa',
     author_email='sathvikudupa66@gmail.com',
     description='Tonic vs bursting package',
-    url='https://github.com/bloodraven66/tonicBurstingPackage',
+    url='https://github.com/bloodraven66/CaMLsort',
     license='MIT',
-    packages=['TVB'],
+    packages=['CaMLsort'],
     install_requires=[
                     'numpy',
                     'scipy',
