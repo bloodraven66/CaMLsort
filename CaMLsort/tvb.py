@@ -1,12 +1,12 @@
-from TVB.models import *
-from TVB.data_utils import *
+from CaMLsort.models import *
+from CaMLsort.data_utils import *
 import numpy as np
 import os
 import copy
-from TVB.train import *
-from TVB.tvb_utils import *
+from CaMLsort.train import *
+from CaMLsort.tvb_utils import *
 from huggingface_hub import hf_hub_download
-from TVB.logger import logger
+from CaMLsort.logger import logger
 
 SUPPORTED_MODELS = [
                     '1CNN',

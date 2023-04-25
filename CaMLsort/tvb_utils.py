@@ -4,7 +4,7 @@ from torch.utils.data import TensorDataset
 import torch
 from tqdm import tqdm
 import operator
-from TVB.logger import logger
+from CaMLsort.logger import logger
 from tqdm import tqdm
 from collections import Counter
 
