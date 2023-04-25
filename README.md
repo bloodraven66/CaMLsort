@@ -2,14 +2,14 @@
 
 install with
 ```
-pip install git+https://github.com/bloodraven66/tonicBurstingPackage.git
+pip install git+https://github.com/bloodraven66/CaMLsort.git
 ```
 
 Usage
 ```
 >>> import numpy as np
 >>> from TVB.tvb import TVB_handler
->>> tvb_handler = TVB_handler("3DNN")
+>>> tvb_handler = TVB_handler("Seq_CNNLSTM_1sec")
 >>> data = np.random.randn(9,900)
 >>> output = tvb_handler.predict(data)
 ```
