@@ -17,7 +17,7 @@ setuptools.setup(
                     'torch', 
                     'matplotlib',
                     'coloredlogs',
-                    'attrdict',
+                    'easydict',
                     'tqdm',
                     'huggingface_hub',
                     'sphinx==3.03',

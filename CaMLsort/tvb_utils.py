@@ -6,8 +6,10 @@ from tqdm import tqdm
 import operator
 from CaMLsort.logger import logger
 from tqdm import tqdm
-from collections import Counter
-
+try:
+    from collections import Counter
+except:
+    from collections.abc import Counter
 
 
 

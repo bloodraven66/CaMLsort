@@ -192,21 +192,21 @@ class TVB_handler():
         train_model(self.model, loaders, device=self.device, training_args=self.args)
 
     # def prep_data(self, da)
-data = np.random.randn(9, 9000)
+# data = np.random.randn(9, 9000)
 # import scipy.io
 # data = scipy.io.loadmat('/home/sathvik/Downloads/5.mat')['imaging'].squeeze()[:, 1]
 # data = np.array([data.tolist() , data.tolist()])
 # print(data.shape)
 # # exit()
-tvb_handler = TVB_handler(
-    'Seq_CNNLSTM_1sec',    
-    custom_model_name="seq_cnn_lstm_1sec_fold_mm_trace_2_300.pth",
-    trace_norm=True,
-)
+# tvb_handler = TVB_handler(
+#     'Seq_CNNLSTM_1sec',    
+#     custom_model_name="seq_cnn_lstm_1sec_fold_mm_trace_2_300.pth",
+#     trace_norm=True,
+# )
 # tvb_handler.train(data, np.array([1, 0]), data, np.array([1, 0]))
 
 # tvb_handler.predict(use_sample_data=True
-res = tvb_handler.predict(data)
+# res = tvb_handler.predict(data)
 # res = res['exp']['0']
 # print(res)
 # import matplotlib.pyplot as plt
