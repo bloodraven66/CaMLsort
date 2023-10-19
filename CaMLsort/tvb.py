@@ -26,6 +26,7 @@ class TVB_handler():
                 device='cpu',
                 custom_model_name=None,
                 trace_norm=False,
+                normalisation="minmax",
                 ):
         self.trace_norm = trace_norm
         self.custom_model_name = custom_model_name
@@ -51,6 +52,7 @@ class TVB_handler():
         self.model = self.get_pretrained_model(self.pretrained_model_name)
         self.args = args
         self.args.config_name = config
+        self.normalisation = normalisation
         if args.load_weights:
             self.download_and_load_weights()
 
