@@ -4,7 +4,7 @@ from torch.utils.data import TensorDataset
 import torch
 from tqdm import tqdm
 import operator
-from TVB.logger import logger
+from CaMLsort.logger import logger
 from tqdm import tqdm
 try:
     from collections import Counter
@@ -29,13 +29,15 @@ def interpolate(data, freq_from, freq_to=30):
 
 
 
-def make_numpyloader(data, window_size, stride, normalisation):
+def make_numpyloader(data, window_size, stride, normalisation, trace_norm):
     chunked_data = {}
     for exp_key in data:
         chunked_data_ = {}
         for filename in data[exp_key]:
             data_, label_ = data[exp_key][filename]
-            chunk_data, chunk_label = chunks(data_, label_, window_size, stride, normalisation)
+            if trace_norm:
+                data_ = normalise_data(data_, norm_type=normalisation)
+            chunk_data, chunk_label = chunks(data_, label_, window_size, stride, normalisation, trace_norm)
             chunked_data_[filename] = [chunk_data, chunk_label]
         chunked_data[exp_key] = chunked_data_
     return chunked_data
@@ -59,12 +61,13 @@ def normalise_data(data, norm_type='minmax'):
         raise NotImplementedError
     return data
 
-def chunks(signal, label_, window_size, stride, normalisation):
+def chunks(signal, label_, window_size, stride, normalisation, trace_norm):
     data, label = [], []
     n_chunks = int((len(signal)-window_size)/stride) +  1
     for i in range(n_chunks):
         chunk = signal[int(i*stride) : int(window_size+(i*stride))]
-        chunk = normalise_data(chunk, norm_type=normalisation)
+        if not trace_norm:
+            chunk = normalise_data(chunk, norm_type=normalisation)
         data.append(chunk)
         label.append(label_)
     return data, label

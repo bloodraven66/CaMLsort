@@ -1,9 +1,9 @@
 import torch
 import os
 import numpy as np
-from TVB.logger import logger
+from CaMLsort.logger import logger
 from torch.utils.data import Dataset
-from TVB.tvb_utils import *
+from CaMLsort.tvb_utils import *
 from huggingface_hub import hf_hub_download
 import shutil
 import yaml

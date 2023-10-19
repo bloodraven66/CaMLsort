@@ -1,12 +1,12 @@
-from TVB.models import *
-from TVB.data_utils import *
+from CaMLsort.models import *
+from CaMLsort.data_utils import *
 import numpy as np
 import os
 import copy
-from TVB.train import *
-from TVB.tvb_utils import *
+from CaMLsort.train import *
+from CaMLsort.tvb_utils import *
 from huggingface_hub import hf_hub_download
-from TVB.logger import logger
+from CaMLsort.logger import logger
 
 SUPPORTED_MODELS = [
                     '1CNN',
@@ -24,8 +24,11 @@ class TVB_handler():
                 repo_id="viks66/TVB",
                 model_cache_dir=".cache_dir",
                 device='cpu',
+                custom_model_name=None,
+                trace_norm=False,
                 ):
-
+        self.trace_norm = trace_norm
+        self.custom_model_name = custom_model_name
         if not os.path.exists(config):
             hf_hub_download(
                             repo_id=repo_id,
@@ -88,18 +91,23 @@ class TVB_handler():
                     'Seq_CNNLSTM_1sec':'seq_cnn_lstm_1sec_fold2_300.pth',
                     'Seq_CNNLSTM':'seq_cnn_lstm_fold2_300.pth',
                     }
-        if os.path.exists(os.path.join(self.model_cache_dir, model_names[self.pretrained_model_name])):
+        model_required = model_names[self.pretrained_model_name]
+        if self.custom_model_name is not None:
+            logger.info(f"Using custom model checkpoint from hub! - {self.custom_model_name}")
+            model_required = self.custom_model_name
+            
+        if os.path.exists(os.path.join(self.model_cache_dir, model_required)):
             logger.info(f'pretrained model weights for {self.pretrained_model_name} found at {self.model_cache_dir}')
         else:
             logger.info(f'pretrained model weights for {self.pretrained_model_name} not found at {self.model_cache_dir}, Downloading..')
             hf_hub_download(
                             repo_id=self.repo_id,
-                            filename=model_names[self.pretrained_model_name],
+                            filename=model_required,
                             cache_dir=self.model_cache_dir,
-                            force_filename=model_names[self.pretrained_model_name]
+                            force_filename=model_required
                             )
             logger.info(f'Weights stored at {self.model_cache_dir}')
-        self.model.load_state_dict(torch.load(os.path.join(self.model_cache_dir, model_names[self.pretrained_model_name]), map_location=self.device))
+        self.model.load_state_dict(torch.load(os.path.join(self.model_cache_dir, model_required), map_location=self.device))
         logger.info(f'Loaded weights into model')
 
     def model_docs(self, 
@@ -128,7 +136,7 @@ class TVB_handler():
         
         data = read_data(data, label, filename, exp_name)
         data = check_sampling_rate(data, sampling_rate)
-        data = make_numpyloader(data, self.window_size, self.stride, self.normalisation)
+        data = make_numpyloader(data, self.window_size, self.stride, self.normalisation, self.trace_norm)
         return data, copy.deepcopy(data)
 
     def train_data_handler(self, 
@@ -182,17 +190,21 @@ class TVB_handler():
         train_model(self.model, loaders, device=self.device, training_args=self.args)
 
     # def prep_data(self, da)
-# data = np.random.randn(9, 9000)
+data = np.random.randn(9, 9000)
 # import scipy.io
 # data = scipy.io.loadmat('/home/sathvik/Downloads/5.mat')['imaging'].squeeze()[:, 1]
 # data = np.array([data.tolist() , data.tolist()])
 # print(data.shape)
 # # exit()
-# tvb_handler = TVB_handler('Seq_CNNLSTM_1sec', config='TVB/configs/default.yaml')
+tvb_handler = TVB_handler(
+    'Seq_CNNLSTM_1sec',    
+    custom_model_name="seq_cnn_lstm_1sec_fold_mm_trace_2_300.pth",
+    trace_norm=True,
+)
 # tvb_handler.train(data, np.array([1, 0]), data, np.array([1, 0]))
 
 # tvb_handler.predict(use_sample_data=True
-# res = tvb_handler.predict(data)
+res = tvb_handler.predict(data)
 # res = res['exp']['0']
 # print(res)
 # import matplotlib.pyplot as plt
