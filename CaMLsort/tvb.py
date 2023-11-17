@@ -27,6 +27,8 @@ class TVB_handler():
                 custom_model_name=None,
                 trace_norm=False,
                 normalisation="minmax",
+                train_stats_norm=False,
+                model_fold=2,
                 ):
         self.trace_norm = trace_norm
         self.custom_model_name = custom_model_name
@@ -53,6 +55,21 @@ class TVB_handler():
         self.args = args
         self.args.config_name = config
         self.normalisation = normalisation
+        self.train_stats_norm = train_stats_norm
+        self.global_mean = {
+                    1: 0.06922638384015144,
+                    2: 0.06822178644573336,
+                    3: 0.06758212764570276,
+                    4: 0.06355638795818142,
+                    5: 0.06376131172118765
+                    }[model_fold]
+        self.global_std = {
+                    1: 0.043288584039826994,
+                    2: 0.042215021714984355,
+                    3: 0.041676298169425266,
+                    4: 0.04149709709158554,
+                    5: 0.041074300511596086
+                    }[model_fold]
         if args.load_weights:
             self.download_and_load_weights()
 
@@ -138,7 +155,7 @@ class TVB_handler():
         
         data = read_data(data, label, filename, exp_name)
         data = check_sampling_rate(data, sampling_rate)
-        data = make_numpyloader(data, self.window_size, self.stride, self.normalisation, self.trace_norm)
+        data = make_numpyloader(data, self.window_size, self.stride, self.normalisation, self.trace_norm, self.train_stats_norm, self.global_mean, self.global_std)
         return data, copy.deepcopy(data)
 
     def train_data_handler(self, 
@@ -199,9 +216,11 @@ class TVB_handler():
 # print(data.shape)
 # # exit()
 # tvb_handler = TVB_handler(
-#     'Seq_CNNLSTM_1sec',    
-#     custom_model_name="seq_cnn_lstm_1sec_fold_mm_trace_2_300.pth",
-#     trace_norm=True,
+    # 'Seq_CNNLSTM_1sec',    
+    # custom_model_name="seq_cnn_lstm_1sec_globalstats_fold_z_2_300.pth",
+    # trace_norm=True,
+    # train_stats_norm=True,
+    # normalisation="z"
 # )
 # tvb_handler.train(data, np.array([1, 0]), data, np.array([1, 0]))
 

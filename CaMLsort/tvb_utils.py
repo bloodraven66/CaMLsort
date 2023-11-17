@@ -29,15 +29,40 @@ def interpolate(data, freq_from, freq_to=30):
 
 
 
-def make_numpyloader(data, window_size, stride, normalisation, trace_norm):
+def make_numpyloader(
+                    data, 
+                    window_size, 
+                    stride, 
+                    normalisation, 
+                    trace_norm, 
+                    train_stats_norm, 
+                    global_mean, 
+                    global_std
+                    ):
     chunked_data = {}
     for exp_key in data:
         chunked_data_ = {}
         for filename in data[exp_key]:
             data_, label_ = data[exp_key][filename]
             if trace_norm:
-                data_ = normalise_data(data_, norm_type=normalisation)
-            chunk_data, chunk_label = chunks(data_, label_, window_size, stride, normalisation, trace_norm)
+                data_ = normalise_data(
+                                    data_, 
+                                    norm_type=normalisation,
+                                    train_stats_norm=train_stats_norm,
+                                    global_mean=global_mean,
+                                    global_std=global_std
+                                    )
+            chunk_data, chunk_label = chunks(
+                                            data_, 
+                                            label_, 
+                                            window_size, 
+                                            stride, 
+                                            normalisation, 
+                                            trace_norm,
+                                            train_stats_norm=train_stats_norm,
+                                            global_mean=global_mean,
+                                            global_std=global_std
+                                            )
             chunked_data_[filename] = [chunk_data, chunk_label]
         chunked_data[exp_key] = chunked_data_
     return chunked_data
@@ -52,22 +77,44 @@ def make_dataloaders(data, label, window_size, stride, normalisation, batch_size
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
     return dataloader
 
-def normalise_data(data, norm_type='minmax'):
+def normalise_data(data, norm_type='minmax', train_stats_norm=False, global_mean=0, global_std=1):
     if norm_type=='z':
-        data = (data-np.mean(data))/np.std(data)
+        if train_stats_norm:
+            m = global_mean
+            s = global_std
+        else:
+            m = np.mean(data)
+            s = np.std(data)
+        data = (data-m)/s
     elif norm_type=='minmax':
         data = (data - min(data))/(max(data)-min(data))
     else:
         raise NotImplementedError
     return data
 
-def chunks(signal, label_, window_size, stride, normalisation, trace_norm):
+def chunks(
+        signal, 
+        label_, 
+        window_size, 
+        stride, 
+        normalisation, 
+        trace_norm,
+        train_stats_norm,
+        global_mean,
+        global_std
+        ):
     data, label = [], []
     n_chunks = int((len(signal)-window_size)/stride) +  1
     for i in range(n_chunks):
         chunk = signal[int(i*stride) : int(window_size+(i*stride))]
         if not trace_norm:
-            chunk = normalise_data(chunk, norm_type=normalisation)
+            chunk = normalise_data(
+                chunk, 
+                norm_type=normalisation,
+                train_stats_norm=train_stats_norm,
+                global_mean=global_mean,
+                global_std=global_std
+            )
         data.append(chunk)
         label.append(label_)
     return data, label
